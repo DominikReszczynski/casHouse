@@ -1,3 +1,5 @@
+import 'package:cas_house/nav_bar/nav_bar_main.dart';
+import 'package:cas_house/sections/section_main.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -11,7 +13,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(title: Text('Backend Test')),
         body: Center(child: HelloButton()),
       ),
     );
@@ -49,15 +50,17 @@ class _HelloButtonState extends State<HelloButton> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(message),
-        SizedBox(height: 20),
-        ElevatedButton(
-          onPressed: fetchMessage,
-          child: Text("Fetch Message from Backend"),
-        ),
+        SectionMain(),
+        NavBarMain()
+        // Text(message),
+        // SizedBox(height: 20),
+        // ElevatedButton(
+        //   onPressed: fetchMessage,
+        //   child: Text("Fetch Message from Backend"),
+        // ),
       ],
     );
   }
