@@ -32,6 +32,9 @@ dependencies:
     sdk: flutter
   http: ^1.2.2
   cupertino_icons: ^1.0.6
+  auto_size_text: ^3.0.0
+  material_design_icons_flutter: ^7.0.7296
+  provider: ^6.1.2
 
 dev_dependencies:
   flutter_test:

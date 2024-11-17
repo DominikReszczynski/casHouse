@@ -1,3 +1,10 @@
+import 'package:cas_house/main_global.dart';
+import 'package:cas_house/providers/dasboard_provider.dart';
+import 'package:cas_house/providers/family_provider.dart';
+import 'package:cas_house/providers/home_provider.dart';
+import 'package:cas_house/providers/shopping_provider.dart';
+import 'package:cas_house/providers/user_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:cas_house/nav_bar/nav_bar_main.dart';
 import 'package:cas_house/sections/section_main.dart';
 import 'package:flutter/material.dart';
@@ -5,17 +12,29 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 void main() {
-  runApp(MyApp());
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (_) => DashboardProvider()),
+    ChangeNotifierProvider(create: (_) => HomeProvider()),
+    ChangeNotifierProvider(create: (_) => ShoppingProvider()),
+    ChangeNotifierProvider(create: (_) => FamilyProvider()),
+    ChangeNotifierProvider(create: (_) => UserProvider())
+  ], child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: Center(child: HelloButton()),
-      ),
-    );
+    return ValueListenableBuilder<ThemeMode>(
+        valueListenable: chosenMode,
+        builder: (context, themeMode, _) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData.light(),
+            darkTheme: ThemeData.dark(),
+            themeMode: themeMode,
+            home: Scaffold(body: HelloButton()),
+          );
+        });
   }
 }
 
@@ -29,8 +48,7 @@ class _HelloButtonState extends State<HelloButton> {
 
   Future<void> fetchMessage() async {
     try {
-      final response =
-          await http.get(Uri.parse('http://10.0.2.2:3000/api/hello'));
+      final response = await http.get(Uri.parse('$apiUrl/api/hello'));
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         setState(() {
@@ -50,18 +68,28 @@ class _HelloButtonState extends State<HelloButton> {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SectionMain(),
-        NavBarMain()
-        // Text(message),
-        // SizedBox(height: 20),
-        // ElevatedButton(
-        //   onPressed: fetchMessage,
-        //   child: Text("Fetch Message from Backend"),
-        // ),
+        // Pass chosenSection and rebuild SectionMain when it changes
+        ValueListenableBuilder<Sections>(
+          valueListenable: chosenSectionNotifier,
+          builder: (context, chosenSection, _) {
+            return SectionMain(chosenSection: chosenSection);
+          },
+        ),
+        NavBarMain(
+          selectedSection: (Sections selectedSection) {
+            changeChosenSection(selectedSection);
+          },
+        ),
       ],
     );
+  }
+
+  @override
+  void dispose() {
+    chosenSectionNotifier.dispose();
+    super.dispose();
   }
 }

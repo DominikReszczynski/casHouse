@@ -1,7 +1,13 @@
+import 'package:cas_house/main_global.dart';
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class NavBarMain extends StatefulWidget {
-  const NavBarMain({super.key});
+  final Function(Sections) selectedSection;
+  const NavBarMain({
+    super.key,
+    required this.selectedSection,
+  });
 
   @override
   State<NavBarMain> createState() => _NavBarMainState();
@@ -10,51 +16,80 @@ class NavBarMain extends StatefulWidget {
 class _NavBarMainState extends State<NavBarMain> {
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    return Stack(children: [
-      Column(
-        children: [
-          Container(
-            height: 20,
-            width: double.maxFinite,
-            decoration: BoxDecoration(color: Colors.pink),
-          ),
-          Container(
-              height: 60,
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Column(
+          children: [
+            Container(
+              height: 50,
               width: double.maxFinite,
+              decoration: const BoxDecoration(
+                border: Border(top: BorderSide(color: Colors.grey, width: 1)),
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(color: Colors.red),
+                  InkWell(
+                    onTap: () => widget.selectedSection(Sections.Dashboard),
+                    child: Icon(
+                      MdiIcons.cashMultiple,
+                      size: 20,
+                      color: Colors.grey,
+                    ),
                   ),
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(color: Colors.transparent),
+                  InkWell(
+                    onTap: () => widget.selectedSection(Sections.Shopping),
+                    child: Icon(
+                      MdiIcons.cart,
+                      size: 20,
+                      color: Colors.grey,
+                    ),
                   ),
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(color: Colors.green),
-                  )
+                  const SizedBox(width: 20),
+                  InkWell(
+                    onTap: () => widget.selectedSection(Sections.Family),
+                    child: Icon(
+                      MdiIcons.humanMaleFemaleChild,
+                      size: 20,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () => widget.selectedSection(Sections.User),
+                    child: Icon(
+                      MdiIcons.account,
+                      size: 20,
+                      color: Colors.grey,
+                    ),
+                  ),
                 ],
-              )),
-        ],
-      ),
-      Positioned(
-          top: 0,
-          left: screenWidth / 2 - 40,
+              ),
+            ),
+          ],
+        ),
+        Positioned(
+          top: -25,
+          left: MediaQuery.of(context).size.width / 2 - 35,
           width: 70,
           height: 70,
-          child: Container(
+          child: InkWell(
+            onTap: () => widget.selectedSection(Sections.Home),
+            child: Container(
               decoration: BoxDecoration(
-                  color: Colors.yellow,
-                  borderRadius: BorderRadius.circular(100)))),
-    ]
-        // Text("Navbar"),
-        );
+                color: Colors.grey,
+                borderRadius: BorderRadius.circular(100),
+                boxShadow: const [
+                  BoxShadow(
+                      color: Colors.yellow, spreadRadius: 3, blurRadius: 8),
+                ],
+              ),
+              child: Icon(MdiIcons.home, color: Colors.white),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }
