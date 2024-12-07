@@ -9,10 +9,10 @@ ValueNotifier<ThemeMode> chosenMode = ValueNotifier(ThemeMode.light);
 
 // Global ValueNotifier to track the currently selected view in the app.
 ValueNotifier<MainViews> currentSite =
-    ValueNotifier<MainViews>(MainViews.events);
+    ValueNotifier<MainViews>(MainViews.dashboard);
 
 // Enum to define the possible views in the application.
-enum MainViews { slask, news, events, explore }
+enum MainViews { dashboard, expenses, shoppingList, user }
 
 // Define commonly used colors in the app to maintain consistency across the UI.
 const Color mainDarkBlue = Color.fromARGB(255, 1, 102, 177);

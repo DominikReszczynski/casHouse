@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class HomeProvider extends ChangeNotifier {
+class ExpansesProvider extends ChangeNotifier {
   int _count = 0;
 
   int get count => _count;

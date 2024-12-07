@@ -1,12 +1,14 @@
 import 'package:cas_house/main_global.dart';
 import 'package:cas_house/providers/dasboard_provider.dart';
-import 'package:cas_house/providers/family_provider.dart';
 import 'package:cas_house/providers/home_provider.dart';
 import 'package:cas_house/providers/shopping_provider.dart';
 import 'package:cas_house/providers/user_provider.dart';
+import 'package:cas_house/sections/expenses/expenses_main.dart';
+import 'package:cas_house/sections/dashboard/dashboard_main.dart';
+import 'package:cas_house/sections/shoppingList/shopping_list_main.dart';
+import 'package:cas_house/sections/user/user_main.dart';
 import 'package:provider/provider.dart';
 import 'package:cas_house/nav_bar/nav_bar_main.dart';
-import 'package:cas_house/sections/section_main.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -14,9 +16,8 @@ import 'dart:convert';
 void main() {
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => DashboardProvider()),
-    ChangeNotifierProvider(create: (_) => HomeProvider()),
+    ChangeNotifierProvider(create: (_) => ExpansesProvider()),
     ChangeNotifierProvider(create: (_) => ShoppingProvider()),
-    ChangeNotifierProvider(create: (_) => FamilyProvider()),
     ChangeNotifierProvider(create: (_) => UserProvider())
   ], child: MyApp()));
 }
@@ -78,20 +79,20 @@ class _HelloButtonState extends State<HelloButton> {
           return _buildBody(); // Dynamically build the screen based on the selected view.
         },
       ),
-      bottomNavigationBar: NavBarMain(),
+      bottomNavigationBar: const NavBarMain(),
     );
   }
 
   Widget _buildBody() {
     switch (currentSite.value) {
-      case MainViews.slask:
-        return Text("slask");
-      case MainViews.news:
-        return Text('news');
-      case MainViews.events:
-        return Text("events");
-      case MainViews.explore:
-        return Text("explore");
+      case MainViews.dashboard:
+        return const HomeSectionMain();
+      case MainViews.expenses:
+        return const ExpensesSectionMain();
+      case MainViews.shoppingList:
+        return const ShoppingMain();
+      case MainViews.user:
+        return const UserSectionMain();
       default:
         return const Center(
             child: Text('Unknown section', style: TextStyle(fontSize: 24)));

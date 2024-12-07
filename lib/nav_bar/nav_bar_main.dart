@@ -25,34 +25,34 @@ class _NavBarMainState extends State<NavBarMain> {
       selectedLabelStyle:
           const TextStyle(fontWeight: FontWeight.bold, fontSize: 10),
       unselectedLabelStyle: const TextStyle(fontSize: 10),
-      items: const [
+      items: [
         BottomNavigationBarItem(
           icon: Icon(
-            Icons.home_outlined,
+            MdiIcons.viewDashboard,
             size: 35,
           ),
-          label: 'Śląskie',
+          label: 'Dashboard',
         ),
         BottomNavigationBarItem(
           icon: Icon(
-            Icons.article_outlined,
+            MdiIcons.cashMultiple,
             size: 35,
           ),
-          label: 'Aktualności',
+          label: 'Expenses',
         ),
         BottomNavigationBarItem(
           icon: Icon(
-            Icons.event_outlined,
+            MdiIcons.cartVariant,
             size: 35,
           ),
-          label: 'Wydarzenia',
+          label: 'Shoping list',
         ),
         BottomNavigationBarItem(
           icon: Icon(
-            Icons.explore_outlined,
+            MdiIcons.account,
             size: 35,
           ),
-          label: 'Eksploruj',
+          label: 'User',
         ),
       ],
       onTap: (index) {
@@ -67,13 +67,13 @@ class _NavBarMainState extends State<NavBarMain> {
   // Maps the MainViews enum to the corresponding BottomNavigationBar index.
   int _mapEnumToIndex(MainViews view) {
     switch (view) {
-      case MainViews.slask:
+      case MainViews.dashboard:
         return 0;
-      case MainViews.news:
+      case MainViews.expenses:
         return 1;
-      case MainViews.events:
+      case MainViews.shoppingList:
         return 2;
-      case MainViews.explore:
+      case MainViews.user:
         return 3;
     }
   }
@@ -82,16 +82,15 @@ class _NavBarMainState extends State<NavBarMain> {
   MainViews _mapIndexToEnum(int index) {
     switch (index) {
       case 0:
-        return MainViews.slask;
+        return MainViews.dashboard;
       case 1:
-        return MainViews.news;
+        return MainViews.expenses;
       case 2:
-        return MainViews.events;
+        return MainViews.shoppingList;
       case 3:
-        return MainViews.explore;
+        return MainViews.user;
       default:
-        return MainViews
-            .events; // Fallback to "events" if the index is invalid.
+        return MainViews.dashboard;
     }
   }
 }
