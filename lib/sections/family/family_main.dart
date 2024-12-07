@@ -1,4 +1,5 @@
 import 'package:cas_house/providers/family_provider.dart';
+import 'package:cas_house/widgets/section_title.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -15,19 +16,10 @@ class _FamilyMainState extends State<FamilyMain> {
   Widget build(BuildContext context) {
     return Consumer<FamilyProvider>(builder: (context, familyProvider, child) {
       return ListView(
-        children: [
-          Center(
-            child: Text(
-              "Family ${familyProvider.count}",
-              style: TextStyle(color: Colors.black),
-            ),
-          ),
-          IconButton(
-              onPressed: () => {familyProvider.increment()},
-              icon: Icon(Icons.plus_one)),
-          IconButton(
-              onPressed: () => {familyProvider.decrement()},
-              icon: Icon(Icons.exposure_minus_1_outlined)),
+        children: const [
+          SectionTitle(
+            title: "FAMILY",
+          )
         ],
       );
     });

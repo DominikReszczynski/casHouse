@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class NavBarMain extends StatefulWidget {
-  final Function(Sections) selectedSection;
   const NavBarMain({
     super.key,
-    required this.selectedSection,
   });
 
   @override
@@ -15,81 +13,85 @@ class NavBarMain extends StatefulWidget {
 
 class _NavBarMainState extends State<NavBarMain> {
   @override
+  @override
   Widget build(BuildContext context) {
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        Column(
-          children: [
-            Container(
-              height: 50,
-              width: double.maxFinite,
-              decoration: const BoxDecoration(
-                border: Border(top: BorderSide(color: Colors.grey, width: 1)),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  InkWell(
-                    onTap: () => widget.selectedSection(Sections.Dashboard),
-                    child: Icon(
-                      MdiIcons.cashMultiple,
-                      size: 20,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () => widget.selectedSection(Sections.Shopping),
-                    child: Icon(
-                      MdiIcons.cart,
-                      size: 20,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  const SizedBox(width: 20),
-                  InkWell(
-                    onTap: () => widget.selectedSection(Sections.Family),
-                    child: Icon(
-                      MdiIcons.humanMaleFemaleChild,
-                      size: 20,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () => widget.selectedSection(Sections.User),
-                    child: Icon(
-                      MdiIcons.account,
-                      size: 20,
-                      color: Colors.grey,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        Positioned(
-          top: -25,
-          left: MediaQuery.of(context).size.width / 2 - 35,
-          width: 70,
-          height: 70,
-          child: InkWell(
-            onTap: () => widget.selectedSection(Sections.Home),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.grey,
-                borderRadius: BorderRadius.circular(100),
-                boxShadow: const [
-                  BoxShadow(
-                      color: Colors.yellow, spreadRadius: 3, blurRadius: 8),
-                ],
-              ),
-              child: Icon(MdiIcons.home, color: Colors.white),
-            ),
+    return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
+      backgroundColor: mainGrey,
+      currentIndex: _mapEnumToIndex(currentSite.value),
+      selectedItemColor: Colors.black,
+      unselectedItemColor: Colors.grey,
+      showUnselectedLabels: true,
+      selectedLabelStyle:
+          const TextStyle(fontWeight: FontWeight.bold, fontSize: 10),
+      unselectedLabelStyle: const TextStyle(fontSize: 10),
+      items: const [
+        BottomNavigationBarItem(
+          icon: Icon(
+            Icons.home_outlined,
+            size: 35,
           ),
+          label: 'Śląskie',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(
+            Icons.article_outlined,
+            size: 35,
+          ),
+          label: 'Aktualności',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(
+            Icons.event_outlined,
+            size: 35,
+          ),
+          label: 'Wydarzenia',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(
+            Icons.explore_outlined,
+            size: 35,
+          ),
+          label: 'Eksploruj',
         ),
       ],
+      onTap: (index) {
+        setState(() {
+          // Updates the global ValueNotifier with the selected view.
+          currentSite.value = _mapIndexToEnum(index);
+        });
+      },
     );
+  }
+
+  // Maps the MainViews enum to the corresponding BottomNavigationBar index.
+  int _mapEnumToIndex(MainViews view) {
+    switch (view) {
+      case MainViews.slask:
+        return 0;
+      case MainViews.news:
+        return 1;
+      case MainViews.events:
+        return 2;
+      case MainViews.explore:
+        return 3;
+    }
+  }
+
+  // Maps the BottomNavigationBar index to the corresponding MainViews enum.
+  MainViews _mapIndexToEnum(int index) {
+    switch (index) {
+      case 0:
+        return MainViews.slask;
+      case 1:
+        return MainViews.news;
+      case 2:
+        return MainViews.events;
+      case 3:
+        return MainViews.explore;
+      default:
+        return MainViews
+            .events; // Fallback to "events" if the index is invalid.
+    }
   }
 }

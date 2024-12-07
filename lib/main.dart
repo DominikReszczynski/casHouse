@@ -68,28 +68,33 @@ class _HelloButtonState extends State<HelloButton> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        // Pass chosenSection and rebuild SectionMain when it changes
-        ValueListenableBuilder<Sections>(
-          valueListenable: chosenSectionNotifier,
-          builder: (context, chosenSection, _) {
-            return SectionMain(chosenSection: chosenSection);
-          },
-        ),
-        NavBarMain(
-          selectedSection: (Sections selectedSection) {
-            changeChosenSection(selectedSection);
-          },
-        ),
-      ],
+    return Scaffold(
+      body:
+          // Pass chosenSection and rebuild SectionMain when it changes
+          ValueListenableBuilder<MainViews>(
+        valueListenable:
+            currentSite, // Observing the global `currentSite` for changes.
+        builder: (context, currentSiteValue, child) {
+          return _buildBody(); // Dynamically build the screen based on the selected view.
+        },
+      ),
+      bottomNavigationBar: NavBarMain(),
     );
   }
 
-  @override
-  void dispose() {
-    chosenSectionNotifier.dispose();
-    super.dispose();
+  Widget _buildBody() {
+    switch (currentSite.value) {
+      case MainViews.slask:
+        return Text("slask");
+      case MainViews.news:
+        return Text('news');
+      case MainViews.events:
+        return Text("events");
+      case MainViews.explore:
+        return Text("explore");
+      default:
+        return const Center(
+            child: Text('Unknown section', style: TextStyle(fontSize: 24)));
+    }
   }
 }

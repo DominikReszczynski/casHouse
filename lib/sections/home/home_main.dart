@@ -15,21 +15,21 @@ class HomeSectionMain extends StatefulWidget {
 
 class _HomeSectionMainState extends State<HomeSectionMain> {
   List<Map<String, dynamic>> widgetContent = [
-    {
-      'icon': Icon(MdiIcons.cashMultiple),
-      'child': const Text('cash'),
-      'openFunction': () => {changeChosenSection(Sections.Dashboard)}
-    },
-    {
-      'icon': Icon(MdiIcons.cart),
-      'child': const Text('shopping'),
-      'openFunction': () => {changeChosenSection(Sections.Shopping)}
-    },
-    {
-      'icon': Icon(MdiIcons.humanMaleFemaleChild),
-      'child': const Text('family'),
-      'openFunction': () => {changeChosenSection(Sections.Family)}
-    },
+    // {
+    //   'icon': Icon(MdiIcons.cashMultiple),
+    //   'child': const Text('cash'),
+    //   'openFunction': () => {changeChosenSection(Sections.Dashboard)}
+    // },
+    // {
+    //   'icon': Icon(MdiIcons.cart),
+    //   'child': const Text('shopping'),
+    //   'openFunction': () => {changeChosenSection(Sections.Shopping)}
+    // },
+    // {
+    //   'icon': Icon(MdiIcons.humanMaleFemaleChild),
+    //   'child': const Text('family'),
+    //   'openFunction': () => {changeChosenSection(Sections.Family)}
+    // },
   ];
   @override
   Widget build(BuildContext context) {
