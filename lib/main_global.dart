@@ -19,3 +19,10 @@ enum MainViews { dashboard, expenses, shoppingList, user }
 const Color mainDarkBlue = Color.fromARGB(255, 1, 102, 177);
 const Color mainGreen = Color.fromARGB(255, 9, 222, 174);
 const Color mainGrey = Color.fromARGB(255, 239, 239, 239);
+
+// Function to convert to the correct format for parsing to double regardless of the sign
+double parseDouble(String text) {
+  String normalizedText = text.replaceAll(',', '.');
+  double parsedValue = double.tryParse(normalizedText) ?? 0.0;
+  return double.parse(parsedValue.toStringAsFixed(2));
+}
