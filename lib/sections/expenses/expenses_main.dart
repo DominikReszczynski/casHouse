@@ -15,14 +15,6 @@ class ExpensesSectionMain extends StatefulWidget {
 class _ExpensesSectionMainState extends State<ExpensesSectionMain> {
   @override
   Widget build(BuildContext context) {
-    addExpensesPopUp() {
-      Navigator.push(context, MaterialPageRoute<void>(
-        builder: (BuildContext context) {
-          return const AddNewExpansesPopup();
-        },
-      ));
-    }
-
     return Consumer<ExpansesProvider>(
         builder: (context, dashboardProvider, child) {
       return Scaffold(
@@ -31,10 +23,15 @@ class _ExpensesSectionMainState extends State<ExpensesSectionMain> {
             actions: <Widget>[
               const SizedBox(),
               IconButton(
-                icon: Icon(MdiIcons.plus),
-                tooltip: 'Add expenses',
-                onPressed: () => addExpensesPopUp(),
-              ),
+                  icon: Icon(MdiIcons.plus),
+                  tooltip: 'Add expenses',
+                  onPressed: () =>
+                      Navigator.push(context, MaterialPageRoute<void>(
+                        builder: (BuildContext context) {
+                          return AddNewExpensesPopup(
+                              provider: Provider.of<ExpansesProvider>(context));
+                        },
+                      ))),
             ],
           ),
           body: ListView(
