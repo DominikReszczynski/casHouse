@@ -1,7 +1,6 @@
 import 'package:cas_house/main_global.dart';
 import 'package:cas_house/providers/dasboard_provider.dart';
 import 'package:cas_house/providers/home_provider.dart';
-import 'package:cas_house/providers/shopping_provider.dart';
 import 'package:cas_house/providers/user_provider.dart';
 import 'package:cas_house/sections/expenses/expenses_main.dart';
 import 'package:cas_house/sections/dashboard/dashboard_main.dart';
@@ -17,7 +16,6 @@ void main() {
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => DashboardProvider()),
     ChangeNotifierProvider(create: (_) => ExpansesProvider()),
-    ChangeNotifierProvider(create: (_) => ShoppingProvider()),
     ChangeNotifierProvider(create: (_) => UserProvider())
   ], child: MyApp()));
 }

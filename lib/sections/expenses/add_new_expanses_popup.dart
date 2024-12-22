@@ -1,7 +1,12 @@
+import 'dart:async';
+
+import 'package:cas_house/BLoC/expenses/expenses_bloc.dart';
+import 'package:cas_house/BLoC/expenses/expenses_event.dart';
 import 'package:cas_house/models/expanses.dart';
-import 'package:cas_house/providers/home_provider.dart';
+import 'package:cas_house/sections/expenses/expanses_global.dart';
 import 'package:flutter/material.dart';
 import 'package:currency_picker/currency_picker.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 // Definicja enum ExpenseCategory
 enum ExpenseCategory {
@@ -22,8 +27,8 @@ enum ExpenseCategory {
 
 // Widget AddNewExpensesPopup
 class AddNewExpensesPopup extends StatefulWidget {
-  final ExpansesProvider provider;
-  const AddNewExpensesPopup({super.key, required this.provider});
+  final ExpensesBloc expensesBloc;
+  const AddNewExpensesPopup({super.key, required this.expensesBloc});
 
   @override
   State<AddNewExpensesPopup> createState() => _AddNewExpensesPopupState();
@@ -41,7 +46,9 @@ class _AddNewExpensesPopupState extends State<AddNewExpensesPopup> {
       ),
       body: Column(
         children: [
-          AddExpenseForm(provider: widget.provider),
+          AddExpenseForm(
+            expensesBloc: widget.expensesBloc,
+          ),
           // Opcjonalnie: Wyświetlanie listy dodanych wydatków
           Expanded(
             child: ListView.builder(
@@ -49,7 +56,7 @@ class _AddNewExpensesPopupState extends State<AddNewExpensesPopup> {
               itemBuilder: (context, index) {
                 final expense = expenses[index];
                 return ListTile(
-                  leading: Icon(_getCategoryIcon(expense.category)),
+                  leading: Icon(getCategoryIcon(expense.category)),
                   title: Text(expense.name),
                   subtitle: Text(
                       '${expense.amount.toStringAsFixed(2)} ${expense.currency.symbol}'),
@@ -64,74 +71,6 @@ class _AddNewExpensesPopupState extends State<AddNewExpensesPopup> {
         ],
       ),
     );
-  }
-
-  // Funkcja pomocnicza do pobrania ikony na podstawie kategorii
-  IconData _getCategoryIcon(ExpenseCategory category) {
-    switch (category) {
-      case ExpenseCategory.food:
-        return Icons.fastfood;
-      case ExpenseCategory.housing:
-        return Icons.home;
-      case ExpenseCategory.utilities:
-        return Icons.lightbulb;
-      case ExpenseCategory.transportation:
-        return Icons.directions_car;
-      case ExpenseCategory.healthcare:
-        return Icons.healing;
-      case ExpenseCategory.entertainment:
-        return Icons.movie;
-      case ExpenseCategory.education:
-        return Icons.school;
-      case ExpenseCategory.personalCare:
-        return Icons.person;
-      case ExpenseCategory.clothing:
-        return Icons.shopping_bag;
-      case ExpenseCategory.savings:
-        return Icons.savings;
-      case ExpenseCategory.debtRepayment:
-        return Icons.money_off;
-      case ExpenseCategory.insurance:
-        return Icons.security;
-      case ExpenseCategory.miscellaneous:
-        return Icons.more_horiz;
-      default:
-        return Icons.help;
-    }
-  }
-
-  // Funkcja pomocnicza do konwersji enum na czytelną nazwę
-  String _getCategoryName(ExpenseCategory category) {
-    switch (category) {
-      case ExpenseCategory.food:
-        return 'Jedzenie';
-      case ExpenseCategory.housing:
-        return 'Mieszkanie';
-      case ExpenseCategory.utilities:
-        return 'Media';
-      case ExpenseCategory.transportation:
-        return 'Transport';
-      case ExpenseCategory.healthcare:
-        return 'Opieka zdrowotna';
-      case ExpenseCategory.entertainment:
-        return 'Rozrywka';
-      case ExpenseCategory.education:
-        return 'Edukacja';
-      case ExpenseCategory.personalCare:
-        return 'Pielęgnacja osobista';
-      case ExpenseCategory.clothing:
-        return 'Odzież';
-      case ExpenseCategory.savings:
-        return 'Oszczędności';
-      case ExpenseCategory.debtRepayment:
-        return 'Spłata długów';
-      case ExpenseCategory.insurance:
-        return 'Ubezpieczenie';
-      case ExpenseCategory.miscellaneous:
-        return 'Inne';
-      default:
-        return '';
-    }
   }
 }
 
@@ -154,8 +93,8 @@ class Expense {
 
 // Widget AddExpenseForm
 class AddExpenseForm extends StatefulWidget {
-  final ExpansesProvider provider;
-  const AddExpenseForm({super.key, required this.provider});
+  final ExpensesBloc expensesBloc;
+  const AddExpenseForm({super.key, required this.expensesBloc});
 
   @override
   _AddExpenseFormState createState() => _AddExpenseFormState();
@@ -191,33 +130,49 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
 
   @override
   void dispose() {
-    // Pamiętaj o zwolnieniu kontrolerów
     _expenseNameController.dispose();
     _amountController.dispose();
     super.dispose();
   }
 
-  void _addExpense() {
+  Future<void> _addExpense() async {
+    // 1. Zbuduj obiekt Expanses
     Expanses expanse = Expanses(
-        authorId: '6459f367dff5d419539cbd41',
-        name: _expenseNameController.text.trim(),
-        description: _expenseDescriptionController.text.trim(),
-        amount: double.parse(_amountController.text.trim()),
-        currency: _selectedCurrency.code,
-        category: _selectedCategory.toString(),
-        placeOfPurchase: _placeOfPurchase.text.trim());
-    // Opcjonalnie: Pokazanie komunikatu potwierdzającego
-    widget.provider.addExpanse(expanse);
-    // if (success) {
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     const SnackBar(
-    //         content: Text('Wydatek "name" dodany w walucie currency.symbol!')),
-    //   );
-    // } else {
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     const SnackBar(content: Text('Wydatek nie został dodany!')),
-    //   );
-    // }
+      authorId: '6459f367dff5d419539cbd41',
+      name: _expenseNameController.text.trim(),
+      description: _expenseDescriptionController.text.trim(),
+      amount: double.parse(_amountController.text.trim()),
+      currency: _selectedCurrency.code,
+      category: _selectedCategory.toString(),
+      placeOfPurchase: _placeOfPurchase.text.trim(),
+    );
+
+    // 2. Stwórz Completer<bool>
+    final completer = Completer<bool>();
+
+    // 3. Dodaj event do Bloc, przekazując expanse i completer
+
+    widget.expensesBloc.add(AddExpanseEvent(expanse, completer));
+
+    // 4. Oczekuj na rezultat z bloca
+    final success = await completer.future;
+
+    // 5. Wyświetl SnackBar w zależności od powodzenia
+    if (success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Wydatek "${_expenseNameController.text}" dodany w walucie ${_selectedCurrency.symbol}!',
+          ),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Wydatek nie został dodany!'),
+        ),
+      );
+    }
   }
 
   void _submitForm() {
@@ -335,7 +290,7 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
                 items: ExpenseCategory.values.map((ExpenseCategory category) {
                   return DropdownMenuItem<ExpenseCategory>(
                     value: category,
-                    child: Text(_getCategoryName(category)),
+                    child: Text(getCategoryName(category)),
                   );
                 }).toList(),
                 onChanged: (ExpenseCategory? newValue) {
@@ -361,39 +316,5 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
         ),
       ),
     );
-  }
-
-  // Funkcja pomocnicza do konwersji enum na czytelną nazwę
-  String _getCategoryName(ExpenseCategory category) {
-    switch (category) {
-      case ExpenseCategory.food:
-        return 'Jedzenie';
-      case ExpenseCategory.housing:
-        return 'Mieszkanie';
-      case ExpenseCategory.utilities:
-        return 'Media';
-      case ExpenseCategory.transportation:
-        return 'Transport';
-      case ExpenseCategory.healthcare:
-        return 'Opieka zdrowotna';
-      case ExpenseCategory.entertainment:
-        return 'Rozrywka';
-      case ExpenseCategory.education:
-        return 'Edukacja';
-      case ExpenseCategory.personalCare:
-        return 'Pielęgnacja osobista';
-      case ExpenseCategory.clothing:
-        return 'Odzież';
-      case ExpenseCategory.savings:
-        return 'Oszczędności';
-      case ExpenseCategory.debtRepayment:
-        return 'Spłata długów';
-      case ExpenseCategory.insurance:
-        return 'Ubezpieczenie';
-      case ExpenseCategory.miscellaneous:
-        return 'Inne';
-      default:
-        return '';
-    }
   }
 }

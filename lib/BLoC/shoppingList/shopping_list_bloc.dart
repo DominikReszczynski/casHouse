@@ -17,6 +17,7 @@ class ShoppingListBloc extends Bloc<ShoppingListEvent, ShoppingListState> {
       final currentState = state as ShoppingListInitial;
       emit(ShoppingListInitial(count: currentState.count - 1));
     });
+
     on<AddItemEvent>((event, emit) {
       final currentState = state as ShoppingListInitial;
 
