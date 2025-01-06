@@ -13,7 +13,6 @@ class ExpansesServices {
       'expanse': expanse,
     };
     print(_urlPrefix);
-    // final response = await http.post(Uri.parse('$_urlPrefix/expanse/add'));
     final http.Response res = await http.post(
       Uri.parse('$_urlPrefix/expanse/add'),
       headers: <String, String>{
@@ -27,6 +26,49 @@ class ExpansesServices {
     if (decodedBody['success']) {
       Expanses expanse = Expanses.fromJson(decodedBody['expanse']);
       return expanse;
+    }
+  }
+
+  getExpansesByAuthor() async {
+    print('test getExpansesByAuthor');
+
+    final http.Response res = await http.post(
+      Uri.parse('$_urlPrefix/expanse/getAnyExpansesByUserId'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    Map<String, dynamic> decodedBody = json.decode(res.body);
+    print("decodebody" + decodedBody['expanses'].toString());
+    if (decodedBody['success']) {
+      List<Expanses> expanses =
+          (decodedBody['expanses'] as List<dynamic>).map((item) {
+        return Expanses.fromJson(item);
+      }).toList();
+      return expanses;
+    }
+  }
+
+  removeExpanse(String expanseId) async {
+    print(1);
+    Map<String, dynamic> body = {
+      'expanseId': expanseId,
+    };
+    print(2);
+    final http.Response res = await http.delete(
+      Uri.parse('$_urlPrefix/expanse/removeExpanse'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(body),
+    );
+    print(3);
+    Map<String, dynamic> decodedBody = json.decode(res.body);
+    print(decodedBody);
+    if (decodedBody['success']) {
+      return true;
+    } else {
+      return false;
     }
   }
 }

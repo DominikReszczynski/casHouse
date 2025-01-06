@@ -10,7 +10,7 @@ abstract class ExpensesState extends Equatable {
 class ExpensesInitial extends ExpensesState {
   final List<Expanses> expansesList;
 
-  ExpensesInitial({this.expansesList = const []});
+  const ExpensesInitial({this.expansesList = const []});
 
   @override
   List<Object?> get props => [expansesList];

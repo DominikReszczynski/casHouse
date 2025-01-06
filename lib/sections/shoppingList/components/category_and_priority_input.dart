@@ -5,10 +5,10 @@ class CategoryAndPriorityInput extends StatefulWidget {
   final Function(String) onPriorityChanged;
 
   const CategoryAndPriorityInput({
-    Key? key,
+    super.key,
     required this.onCategoryChanged,
     required this.onPriorityChanged,
-  }) : super(key: key);
+  });
 
   @override
   _CategoryAndPriorityInputState createState() =>

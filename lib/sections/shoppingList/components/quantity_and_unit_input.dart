@@ -29,7 +29,7 @@ class _QuantityAndUnitInputState extends State<QuantityAndUnitInput> {
           flex: 2,
           child: TextField(
             controller: _quantityController,
-            keyboardType: TextInputType.numberWithOptions(decimal: true),
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
               labelText: 'Quantity',
               border: OutlineInputBorder(

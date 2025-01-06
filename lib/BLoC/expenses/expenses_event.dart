@@ -17,3 +17,8 @@ class AddExpanseEvent extends ExpensesEvent {
   @override
   List<Object> get props => [expanse];
 }
+
+class GetAnyUserExpanseEvent extends ExpensesEvent {
+  final Completer<bool> completer;
+  GetAnyUserExpanseEvent(this.completer);
+}

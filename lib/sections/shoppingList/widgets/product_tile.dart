@@ -58,7 +58,7 @@ class _PrductTileState extends State<PrductTile> {
                                             : Colors.red,
                                     borderRadius: BorderRadius.circular(1000)),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 5,
                               ),
                               AutoSizeText(
@@ -111,7 +111,7 @@ class _PrductTileState extends State<PrductTile> {
             ),
           ),
           if (isExanded)
-            Column(
+            const Column(
               children: [
                 Text('aditional text'),
               ],

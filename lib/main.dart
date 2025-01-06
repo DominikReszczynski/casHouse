@@ -1,6 +1,7 @@
 import 'package:cas_house/main_global.dart';
 import 'package:cas_house/providers/dasboard_provider.dart';
-import 'package:cas_house/providers/home_provider.dart';
+import 'package:cas_house/providers/expanses_provider.dart';
+import 'package:cas_house/providers/shopping_list_provider.dart';
 import 'package:cas_house/providers/user_provider.dart';
 import 'package:cas_house/sections/expenses/expenses_main.dart';
 import 'package:cas_house/sections/dashboard/dashboard_main.dart';
@@ -13,14 +14,22 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 void main() {
-  runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(create: (_) => DashboardProvider()),
-    ChangeNotifierProvider(create: (_) => ExpansesProvider()),
-    ChangeNotifierProvider(create: (_) => UserProvider())
-  ], child: MyApp()));
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => DashboardProvider()),
+        ChangeNotifierProvider(create: (_) => ExpansesProvider()),
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => ShoppingListProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<ThemeMode>(
@@ -38,6 +47,8 @@ class MyApp extends StatelessWidget {
 }
 
 class HelloButton extends StatefulWidget {
+  const HelloButton({super.key});
+
   @override
   _HelloButtonState createState() => _HelloButtonState();
 }

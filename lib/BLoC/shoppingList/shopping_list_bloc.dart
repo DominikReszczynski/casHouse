@@ -1,23 +1,11 @@
 import 'package:cas_house/BLoC/shoppingList/shopping_list_event.dart';
 import 'package:cas_house/BLoC/shoppingList/shopping_list_state.dart';
-import 'package:cas_house/main_global.dart';
 import 'package:cas_house/models/product_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ShoppingListBloc extends Bloc<ShoppingListEvent, ShoppingListState> {
   final List<ProductModel> _shoppingList = [];
   ShoppingListBloc() : super(ShoppingListInitial()) {
-    on<IncrementEvent>((event, emit) {
-      final currentState = state as ShoppingListInitial;
-      emit(ShoppingListInitial(count: currentState.count + 1));
-    });
-
-    // Obsługa DecrementEvent
-    on<DecrementEvent>((event, emit) {
-      final currentState = state as ShoppingListInitial;
-      emit(ShoppingListInitial(count: currentState.count - 1));
-    });
-
     on<AddItemEvent>((event, emit) {
       final currentState = state as ShoppingListInitial;
 

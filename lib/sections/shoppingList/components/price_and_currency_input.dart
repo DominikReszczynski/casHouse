@@ -29,7 +29,7 @@ class _PriceAndCurrencyInputState extends State<PriceAndCurrencyInput> {
           flex: 2,
           child: TextField(
             controller: _priceController,
-            keyboardType: TextInputType.numberWithOptions(decimal: true),
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
               labelText: 'Price',
               border: OutlineInputBorder(

@@ -16,21 +16,21 @@ class _UserSectionMainState extends State<UserSectionMain> {
     return Consumer<UserProvider>(builder: (context, userProvider, child) {
       return ListView(
         children: [
-          UserSectionHeader(),
+          const UserSectionHeader(),
           Column(
             children: [
               Center(
                 child: Text(
                   "User ${userProvider.count}",
-                  style: TextStyle(color: Colors.black),
+                  style: const TextStyle(color: Colors.black),
                 ),
               ),
               IconButton(
                   onPressed: () => {userProvider.increment()},
-                  icon: Icon(Icons.plus_one)),
+                  icon: const Icon(Icons.plus_one)),
               IconButton(
                   onPressed: () => {userProvider.decrement()},
-                  icon: Icon(Icons.exposure_minus_1_outlined)),
+                  icon: const Icon(Icons.exposure_minus_1_outlined)),
             ],
           ),
         ],

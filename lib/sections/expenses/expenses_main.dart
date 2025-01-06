@@ -1,10 +1,9 @@
-import 'package:cas_house/BLoC/expenses/expenses_bloc.dart';
-import 'package:cas_house/BLoC/expenses/expenses_event.dart';
-import 'package:cas_house/BLoC/expenses/expanses_state.dart';
-import 'package:cas_house/models/expanses.dart';
-import 'package:cas_house/sections/expenses/add_new_expanses_popup.dart';
+import 'package:cas_house/sections/expenses/expanse_tile.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
+import 'package:cas_house/models/expanses.dart';
+import 'package:cas_house/providers/expanses_provider.dart';
+import 'package:cas_house/sections/expenses/add_new_expanses_popup.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class ExpensesSectionMain extends StatefulWidget {
@@ -15,59 +14,56 @@ class ExpensesSectionMain extends StatefulWidget {
 }
 
 class _ExpensesSectionMainState extends State<ExpensesSectionMain> {
+  bool isLoading = false;
+  @override
+  void initState() {
+    setState(() {
+      isLoading = true;
+    });
+    Provider.of<ExpansesProvider>(context, listen: false).fetchExpenses();
+    setState(() {
+      isLoading = false;
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => ExpensesBloc(),
-      child: BlocBuilder<ExpensesBloc, ExpensesState>(
-        builder: (context, state) {
-          final bloc = BlocProvider.of<ExpensesBloc>(context);
+    final expansesProvider = Provider.of<ExpansesProvider>(context);
 
-          List<Expanses> expansesList = [];
-          if (state is ExpensesInitial) {
-            expansesList = state.expansesList;
-          }
-          return Scaffold(
-            appBar: AppBar(
-              title: const Text('Expenses'),
-              actions: <Widget>[
-                const SizedBox(),
-                IconButton(
-                  icon: Icon(MdiIcons.plus),
-                  tooltip: 'Add expenses',
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => AddNewExpensesPopup(
-                        expensesBloc: context.read<ExpensesBloc>(),
-                      ),
-                    ),
-                  ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Expenses'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(MdiIcons.plus),
+            tooltip: 'Add expenses',
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => AddNewExpensesPopup(
+                  // Przekazywanie providera do okna dodawania
+                  expensesProvider: expansesProvider,
                 ),
-              ],
+              ),
             ),
-            body: BlocBuilder<ExpensesBloc, ExpensesState>(
-              builder: (context, state) {
-                if (state is ExpensesInitial) {
-                  return ListView.builder(
-                    itemCount: expansesList.length + 1,
-                    itemBuilder: (context, index) {
-                      if (index < expansesList.length) {
-                        final item = expansesList[index];
-                        return Text(item.name);
-                      } else {
-                        return const SizedBox.shrink();
-                      }
-                    },
-                  );
-                } else {
-                  return const Center(child: CircularProgressIndicator());
-                }
-              },
-            ),
-          );
-        },
+          ),
+        ],
       ),
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : expansesProvider.expansesList.isEmpty
+              ? const Center(child: Text('No expenses found.'))
+              : ListView.builder(
+                  itemCount: expansesProvider.expansesList.length,
+                  itemBuilder: (context, index) {
+                    final item = expansesProvider.expansesList[index];
+                    return ExpenseTile(
+                      provider: expansesProvider,
+                      expanse: item,
+                    );
+                  },
+                ),
     );
   }
 }
