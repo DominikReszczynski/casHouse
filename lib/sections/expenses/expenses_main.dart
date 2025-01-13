@@ -33,6 +33,10 @@ class _ExpensesSectionMainState extends State<ExpensesSectionMain> {
 
     return Scaffold(
       appBar: AppBar(
+        bottom: const PreferredSize(
+          preferredSize: Size.fromHeight(4),
+          child: Divider(),
+        ),
         title: const Text('Expenses'),
         actions: <Widget>[
           IconButton(

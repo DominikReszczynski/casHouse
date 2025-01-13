@@ -1,10 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:cas_house/BLoC/dashboard/dashboard_bloc.dart';
-import 'package:cas_house/BLoC/dashboard/dashboard_event.dart';
-import 'package:cas_house/BLoC/dashboard/dashboard_state.dart';
-import 'package:cas_house/sections/dashboard/dashboard_widget.dart';
+import 'package:cas_house/sections/dashboard/ai_field.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
+import 'package:cas_house/providers/dasboard_provider.dart';
 
 class HomeSectionMain extends StatefulWidget {
   const HomeSectionMain({super.key});
@@ -14,57 +12,29 @@ class HomeSectionMain extends StatefulWidget {
 }
 
 class _HomeSectionMainState extends State<HomeSectionMain> {
-  List<Map<String, dynamic>> widgetContent = [];
+  late DashboardProvider dashboardProvider;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    dashboardProvider = Provider.of<DashboardProvider>(context, listen: true);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => DashboardBloc(),
-      child: BlocBuilder<DashboardBloc, DashboardState>(
-        builder: (context, state) {
-          final bloc = BlocProvider.of<DashboardBloc>(context);
-
-          int count = 0;
-          if (state is DashboardInitial) {
-            count = state.count;
-          }
-
-          return ListView(
-            shrinkWrap: true,
-            children: [
-              const AutoSizeText(
-                "Hi, Dominik",
-                style: TextStyle(fontSize: 40, fontWeight: FontWeight.w700),
-              ),
-              const Divider(),
-              Center(
-                child: Text(
-                  "Dashboard $count",
-                  style: const TextStyle(color: Colors.black),
-                ),
-              ),
-              IconButton(
-                onPressed: () {
-                  bloc.add(IncrementEvent());
-                },
-                icon: const Icon(Icons.plus_one),
-              ),
-              IconButton(
-                onPressed: () {
-                  bloc.add(DecrementEvent());
-                },
-                icon: const Icon(Icons.exposure_minus_1_outlined),
-              ),
-              for (Map data in widgetContent)
-                HomeWidget(
-                  icon: data['icon'],
-                  openFunction: data['openFunction'],
-                  child: data['child'],
-                ),
-            ],
-          );
-        },
-      ),
+    return ListView(
+      shrinkWrap: true,
+      children: [
+        const Padding(
+          padding: EdgeInsets.only(left: 10.0, right: 10, top: 20),
+          child: AutoSizeText(
+            "Hi, Dominik",
+            style: TextStyle(fontSize: 30, fontWeight: FontWeight.w700),
+          ),
+        ),
+        const Divider(),
+        AiField(dashboardProvider: dashboardProvider)
+      ],
     );
   }
 }
