@@ -29,7 +29,7 @@ class ExpansesServices {
     }
   }
 
-  getExpansesByAuthor() async {
+  getAllExpansesByAuthor() async {
     print('test getExpansesByAuthor');
 
     final http.Response res = await http.post(
@@ -46,6 +46,68 @@ class ExpansesServices {
         return Expanses.fromJson(item);
       }).toList();
       return expanses;
+    }
+  }
+
+  getAllExpansesByAuthorExcludingCurrentMonth() async {
+    print('test getExpansesByAuthor');
+
+    final http.Response res = await http.post(
+      Uri.parse(
+          '$_urlPrefix/expanse/getAllExpansesByAuthorExcludingCurrentMonth'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    Map<String, dynamic> decodedBody = json.decode(res.body);
+    // print("decodebody" + decodedBody.toString());
+    if (decodedBody['success']) {
+      // List<Expanses> expanses = decodedBody['groupedExpanses'].map((item) {
+      //   return Expanses.fromJson(item);
+      // }).toList();
+      return decodedBody['groupedExpanses'];
+    }
+  }
+
+  getExpansesByAuthorForCurrentMonth() async {
+    print('test getExpansesByAuthor');
+
+    final http.Response res = await http.post(
+      Uri.parse('$_urlPrefix/expanse/getExpansesByAuthorForCurrentMonth'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    Map<String, dynamic> decodedBody = json.decode(res.body);
+    print("decodebody" + decodedBody['expanses'].toString());
+    if (decodedBody['success']) {
+      List<Expanses> expanses =
+          (decodedBody['expanses'] as List<dynamic>).map((item) {
+        return Expanses.fromJson(item);
+      }).toList();
+      return expanses;
+    }
+  }
+
+  getExpensesGroupedByCategory(String date, String userId) async {
+    print('test getExpensesGroupedByCategory');
+
+    Map<String, dynamic> body = {
+      'authorId': userId,
+      'monthYear': date, //2024-12
+    };
+
+    final http.Response res = await http.post(
+      Uri.parse('$_urlPrefix/expanse/getExpensesGroupedByCategory'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(body),
+    );
+    Map<String, dynamic> decodedBody = json.decode(res.body);
+    // print("decodebody" + decodedBody['expanses'].toString());
+    if (decodedBody['success']) {
+      return decodedBody['groupedByCategory'];
     }
   }
 

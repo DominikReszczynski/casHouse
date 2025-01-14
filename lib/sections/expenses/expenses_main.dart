@@ -1,4 +1,7 @@
+import 'package:cas_house/main_global.dart';
 import 'package:cas_house/sections/expenses/expanse_tile.dart';
+import 'package:cas_house/sections/expenses/history_of_expanses_popup.dart';
+import 'package:cas_house/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cas_house/models/expanses.dart';
@@ -15,21 +18,40 @@ class ExpensesSectionMain extends StatefulWidget {
 
 class _ExpensesSectionMainState extends State<ExpensesSectionMain> {
   bool isLoading = false;
+  int? currentMonth;
+  int? currentYear;
+  late ExpansesProvider provider;
+  void fun() async {
+    await provider.fetchExpensesForCurrentMonth();
+    setState(() {});
+  }
+
+  void getByGroup(String date, String userId) async {
+    await provider.fetchExpensesGroupedByCategory(date, userId);
+  }
+
   @override
   void initState() {
     setState(() {
       isLoading = true;
     });
-    Provider.of<ExpansesProvider>(context, listen: false).fetchExpenses();
+    provider = Provider.of<ExpansesProvider>(context, listen: false);
+    fun();
+    DateTime now = DateTime.now();
+
+    currentMonth = now.month;
+    currentYear = now.year;
     setState(() {
       isLoading = false;
     });
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final expansesProvider = Provider.of<ExpansesProvider>(context);
+    final expansesProvider =
+        Provider.of<ExpansesProvider>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(
@@ -40,13 +62,24 @@ class _ExpensesSectionMainState extends State<ExpensesSectionMain> {
         title: const Text('Expenses'),
         actions: <Widget>[
           IconButton(
+            icon: Icon(MdiIcons.history),
+            tooltip: 'History of expanses',
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => HistoryOfExpensesPopup(
+                  expansesProvider: expansesProvider,
+                ),
+              ),
+            ),
+          ),
+          IconButton(
             icon: Icon(MdiIcons.plus),
             tooltip: 'Add expenses',
             onPressed: () => Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (_) => AddNewExpensesPopup(
-                  // Przekazywanie providera do okna dodawania
                   expensesProvider: expansesProvider,
                 ),
               ),
@@ -54,20 +87,51 @@ class _ExpensesSectionMainState extends State<ExpensesSectionMain> {
           ),
         ],
       ),
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : expansesProvider.expansesList.isEmpty
-              ? const Center(child: Text('No expenses found.'))
-              : ListView.builder(
-                  itemCount: expansesProvider.expansesList.length,
-                  itemBuilder: (context, index) {
-                    final item = expansesProvider.expansesList[index];
-                    return ExpenseTile(
-                      provider: expansesProvider,
-                      expanse: item,
-                    );
-                  },
+      body: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("$currentMonth.$currentYear"),
+              IconButton(
+                icon: Icon(MdiIcons.plus),
+                tooltip: 'Summarize',
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => AddNewExpensesPopup(
+                      expensesProvider: expansesProvider,
+                    ),
+                  ),
                 ),
+              ),
+              IconButton(
+                  onPressed: () {
+                    getByGroup("$currentYear-$currentMonth", userId);
+                  },
+                  icon: Icon(Icons.add)),
+            ],
+          ),
+          isLoading
+              ? const Center(child: LoadingWidget())
+              : expansesProvider.expansesListThisMounth.isEmpty
+                  ? const Center(child: Text('No expenses found.'))
+                  : Expanded(
+                      child: ListView.builder(
+                        itemCount:
+                            expansesProvider.expansesListThisMounth.length,
+                        itemBuilder: (context, index) {
+                          final item =
+                              expansesProvider.expansesListThisMounth[index];
+                          return ExpenseTile(
+                            provider: expansesProvider,
+                            expanse: item,
+                          );
+                        },
+                      ),
+                    ),
+        ],
+      ),
     );
   }
 }

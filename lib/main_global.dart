@@ -26,3 +26,5 @@ double parseDouble(String text) {
   double parsedValue = double.tryParse(normalizedText) ?? 0.0;
   return double.parse(parsedValue.toStringAsFixed(2));
 }
+
+String userId = "6459f367dff5d419539cbd41";
