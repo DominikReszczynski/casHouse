@@ -29,8 +29,7 @@ class ExpansesProvider extends ChangeNotifier {
     try {
       final Map<String, dynamic>? result =
           await ExpansesServices().getExpensesGroupedByCategory(date, userId);
-
-      return result!['groupedByCategory'];
+      return result;
     } catch (e) {
       print("Error fetching expenses: $e");
     } finally {

@@ -1,5 +1,6 @@
 import 'package:cas_house/models/expanses.dart';
 import 'package:cas_house/sections/expenses/expanse_tile.dart';
+import 'package:cas_house/sections/expenses/summarize_expanse.dart';
 import 'package:flutter/material.dart';
 import 'package:cas_house/providers/expanses_provider.dart';
 
@@ -17,9 +18,7 @@ class HistoryOfExpensesPopup extends StatefulWidget {
 class _HistoryOfExpensesPopupState extends State<HistoryOfExpensesPopup> {
   bool isLoading = false;
   void fun() async {
-    await
-
-        widget.expansesProvider.fetchExpansesByAuthorExcludingCurrentMonth();
+    await widget.expansesProvider.fetchExpansesByAuthorExcludingCurrentMonth();
     setState(() {});
   }
 
@@ -58,9 +57,28 @@ class _HistoryOfExpensesPopupState extends State<HistoryOfExpensesPopup> {
                         : Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                historyItem['monthYear'],
-                                style: Theme.of(context).textTheme.titleLarge,
+                              Row(
+                                children: [
+                                  Text(
+                                    historyItem['monthYear'],
+                                    style:
+                                        Theme.of(context).textTheme.titleLarge,
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.summarize),
+                                    tooltip: 'Summarize',
+                                    onPressed: () => Navigator.push(
+                                      
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (_) => SummarizeExpensesPopup(
+                                              expansesProvider:
+                                                  widget.expansesProvider,
+                                              date:
+                                                  "${historyItem['monthYear']}")),
+                                    ),
+                                  ),
+                                ],
                               ),
                               ListView.builder(
                                 shrinkWrap: true,

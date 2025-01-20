@@ -1,6 +1,8 @@
 import 'package:cas_house/main_global.dart';
 import 'package:cas_house/sections/expenses/expanse_tile.dart';
 import 'package:cas_house/sections/expenses/history_of_expanses_popup.dart';
+
+import 'package:cas_house/sections/expenses/summarize_expanse.dart';
 import 'package:cas_house/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -92,24 +94,21 @@ class _ExpensesSectionMainState extends State<ExpensesSectionMain> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("$currentMonth.$currentYear"),
+              Text(
+                "$currentMonth-$currentYear",
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
               IconButton(
-                icon: Icon(MdiIcons.plus),
+                icon: const Icon(Icons.summarize),
                 tooltip: 'Summarize',
                 onPressed: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => AddNewExpensesPopup(
-                      expensesProvider: expansesProvider,
-                    ),
-                  ),
+                      builder: (_) => SummarizeExpensesPopup(
+                          expansesProvider: expansesProvider,
+                          date: "$currentYear-$currentMonth")),
                 ),
               ),
-              IconButton(
-                  onPressed: () {
-                    getByGroup("$currentYear-$currentMonth", userId);
-                  },
-                  icon: Icon(Icons.add)),
             ],
           ),
           isLoading

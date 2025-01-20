@@ -68,3 +68,21 @@ String getCategoryName(ExpenseCategory category) {
       return '';
   }
 }
+
+getCategoryNameFromString(String categoryNameFromBackend) {
+  ExpenseCategory category = ExpenseCategory.values.firstWhere(
+    (e) => e.toString() == categoryNameFromBackend,
+    orElse: () => ExpenseCategory.miscellaneous,
+  );
+  String categoryName = getCategoryName(category);
+  return categoryName;
+}
+
+getCategoryIconFromString(String categoryNameFromBackend) {
+  ExpenseCategory category = ExpenseCategory.values.firstWhere(
+    (e) => e.toString() == categoryNameFromBackend,
+    orElse: () => ExpenseCategory.miscellaneous,
+  );
+  IconData categoryIcon = getCategoryIcon(category);
+  return categoryIcon;
+}
