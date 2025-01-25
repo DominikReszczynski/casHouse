@@ -23,6 +23,7 @@ class DashboardProvider extends ChangeNotifier {
   void chat() async {
     ChangeChatLoading();
     final String result = await DashboardServices().chat();
+    print(result);
     _chatText = result;
     ChangeChatLoading();
     notifyListeners();

@@ -8,9 +8,7 @@ class DashboardServices {
 
   chat() async {
     print('DashboardServices');
-    Map<String, dynamic> body = {
-      'userID': "6459f367dff5d419539cbd41"
-    };
+    Map<String, dynamic> body = {'userID': "6459f367dff5d419539cbd41"};
     print(_urlPrefix);
     final http.Response res = await http.post(
       Uri.parse('$_urlPrefix/dashboard/chat'),
@@ -22,7 +20,7 @@ class DashboardServices {
     Map<String, dynamic> decodedBody = json.decode(res.body);
     print(decodedBody);
     if (decodedBody['success']) {
-      String text = decodedBody['text'];
+      String text = decodedBody['text'][0]['text'];
       return text;
     }
   }
