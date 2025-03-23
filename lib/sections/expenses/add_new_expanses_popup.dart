@@ -1,3 +1,4 @@
+import 'package:cas_house/main_global.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:currency_picker/currency_picker.dart';
@@ -67,7 +68,7 @@ class _AddNewExpensesPopupState extends State<AddNewExpensesPopup> {
 
       // Utworzenie obiektu Expanses
       Expanses expanse = Expanses(
-        authorId: '6459f367dff5d419539cbd41',
+        authorId: loggedUser!.id,
         name: _expenseNameController.text.trim(),
         description: _expenseDescriptionController.text.trim(),
         amount: double.parse(_amountController.text.trim()),

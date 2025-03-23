@@ -15,6 +15,8 @@ Expanses _$ExpansesFromJson(Map<String, dynamic> json) => Expanses(
       currency: json['currency'] as String,
       placeOfPurchase: json['placeOfPurchase'] as String?,
       category: json['category'] as String,
+      createdAt: Expanses._fromJsonDate(json['createdAt']),
+      updatedAt: Expanses._fromJsonDate(json['updatedAt']),
     );
 
 Map<String, dynamic> _$ExpansesToJson(Expanses instance) => <String, dynamic>{
@@ -26,4 +28,6 @@ Map<String, dynamic> _$ExpansesToJson(Expanses instance) => <String, dynamic>{
       'currency': instance.currency,
       'placeOfPurchase': instance.placeOfPurchase,
       'category': instance.category,
+      'createdAt': Expanses._toJsonDate(instance.createdAt),
+      'updatedAt': Expanses._toJsonDate(instance.updatedAt),
     };

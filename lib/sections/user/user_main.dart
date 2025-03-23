@@ -1,4 +1,5 @@
 import 'package:cas_house/providers/user_provider.dart';
+import 'package:cas_house/sections/login.dart';
 import 'package:cas_house/sections/user/user_section_header.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,21 +18,24 @@ class _UserSectionMainState extends State<UserSectionMain> {
       return ListView(
         children: [
           const UserSectionHeader(),
-          Column(
-            children: [
-              Center(
-                child: Text(
-                  "User ${userProvider.count}",
-                  style: const TextStyle(color: Colors.black),
-                ),
+          const SizedBox(height: 20),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: ElevatedButton.icon(
+              icon: const Icon(Icons.logout),
+              label: const Text('Wyloguj się'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.redAccent,
+                foregroundColor: Colors.white,
               ),
-              IconButton(
-                  onPressed: () => {userProvider.increment()},
-                  icon: const Icon(Icons.plus_one)),
-              IconButton(
-                  onPressed: () => {userProvider.decrement()},
-                  icon: const Icon(Icons.exposure_minus_1_outlined)),
-            ],
+              onPressed: () {
+                userProvider.logout();
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (_) => const LoginScreen()),
+                  (route) => false,
+                );
+              },
+            ),
           ),
         ],
       );

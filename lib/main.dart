@@ -5,6 +5,7 @@ import 'package:cas_house/providers/shopping_list_provider.dart';
 import 'package:cas_house/providers/user_provider.dart';
 import 'package:cas_house/sections/expenses/expenses_main.dart';
 import 'package:cas_house/sections/dashboard/dashboard_main.dart';
+import 'package:cas_house/sections/login.dart';
 import 'package:cas_house/sections/shoppingList/shopping_list_main.dart';
 import 'package:cas_house/sections/user/user_main.dart';
 import 'package:provider/provider.dart';
@@ -40,7 +41,13 @@ class MyApp extends StatelessWidget {
             theme: ThemeData.light(),
             darkTheme: ThemeData.dark(),
             themeMode: themeMode,
-            home: Scaffold(body: HelloButton()),
+            home: Consumer<UserProvider>(
+              builder: (context, userProvider, child) {
+                return userProvider.isLoggedIn
+                    ? const HelloButton()
+                    : const LoginScreen();
+              },
+            ),
           );
         });
   }

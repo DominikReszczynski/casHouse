@@ -29,7 +29,7 @@ class _SummarizeExpensesPopupState extends State<SummarizeExpensesPopup> {
 
   @override
   void initState() {
-    getByGroup(widget.date, userId);
+    getByGroup(widget.date, loggedUser!.id!);
     setState(() {});
     print(widget.date);
     super.initState();

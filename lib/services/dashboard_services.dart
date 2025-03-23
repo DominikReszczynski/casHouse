@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cas_house/api_service.dart';
+import 'package:cas_house/main_global.dart';
 import 'package:http/http.dart' as http;
 
 class DashboardServices {
@@ -8,7 +9,7 @@ class DashboardServices {
 
   chat() async {
     print('DashboardServices');
-    Map<String, dynamic> body = {'userID': "6459f367dff5d419539cbd41"};
+    Map<String, dynamic> body = {'userID': loggedUser!.id};
     print(_urlPrefix);
     final http.Response res = await http.post(
       Uri.parse('$_urlPrefix/dashboard/chat'),

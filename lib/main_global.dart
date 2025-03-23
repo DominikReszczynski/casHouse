@@ -1,3 +1,4 @@
+import 'package:cas_house/models/user.dart';
 import 'package:flutter/material.dart';
 
 String apiUrl = "http://10.0.2.2:3000";
@@ -27,4 +28,4 @@ double parseDouble(String text) {
   return double.parse(parsedValue.toStringAsFixed(2));
 }
 
-String userId = "6459f367dff5d419539cbd41";
+User? loggedUser;
