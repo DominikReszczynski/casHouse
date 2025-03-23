@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cas_house/api_service.dart';
+import 'package:cas_house/main_global.dart';
 import 'package:cas_house/models/expanses.dart';
 import 'package:http/http.dart' as http;
 
@@ -31,12 +32,15 @@ class ExpansesServices {
 
   getAllExpansesByAuthor() async {
     print('test getExpansesByAuthor');
-
+    Map<String, dynamic> body = {
+      'authorId': loggedUser!.id,
+    };
     final http.Response res = await http.post(
       Uri.parse('$_urlPrefix/expanse/getAnyExpansesByUserId'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
+      body: jsonEncode(body),
     );
     Map<String, dynamic> decodedBody = json.decode(res.body);
     print("decodebody" + decodedBody['expanses'].toString());
@@ -51,13 +55,16 @@ class ExpansesServices {
 
   getAllExpansesByAuthorExcludingCurrentMonth() async {
     print('test getExpansesByAuthor');
-
+    Map<String, dynamic> body = {
+      'authorId': loggedUser!.id,
+    };
     final http.Response res = await http.post(
       Uri.parse(
           '$_urlPrefix/expanse/getAllExpansesByAuthorExcludingCurrentMonth'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
+      body: jsonEncode(body),
     );
     Map<String, dynamic> decodedBody = json.decode(res.body);
     // print("decodebody" + decodedBody.toString());
@@ -71,12 +78,15 @@ class ExpansesServices {
 
   getExpansesByAuthorForCurrentMonth() async {
     print('test getExpansesByAuthor');
-
+    Map<String, dynamic> body = {
+      'authorId': loggedUser!.id,
+    };
     final http.Response res = await http.post(
       Uri.parse('$_urlPrefix/expanse/getExpansesByAuthorForCurrentMonth'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
+      body: jsonEncode(body),
     );
     Map<String, dynamic> decodedBody = json.decode(res.body);
     print("decodebody" + decodedBody['expanses'].toString());
@@ -93,7 +103,7 @@ class ExpansesServices {
     print('test getExpensesGroupedByCategory');
 
     Map<String, dynamic> body = {
-      'authorId': userId,
+      'authorId': loggedUser!.id,
       'monthYear': date, //2024-12
     };
 
